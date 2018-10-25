@@ -3,8 +3,11 @@ class TasksController < ApplicationController
   end
   def create
     @task = Task.new(params.require(:task).permit(:description, :status))
-    @task.save #salva no banco a tarefa que criamos
-    redirect_to root_path
+    if @task.save
+      redirect_to root_path
+    else
+      render :new
+    end
   end
   def edit
     @task = Task.find(params[:id])
@@ -13,10 +16,20 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
     @task.update(params.require(:task).permit(:description, :status))
     redirect_to root_path
+    if @task.save
+      redirect_to root_path
+    else
+      render :new
+    end
   end
   def destroy
     task = Task.find(params[:id]) # não precisamos de @ pois não temos view que usará esse objeto
     task.destroy #destrói a tarefa encontrada
     redirect_to root_path
+  end
+  def show
+  end
+  def new
+    @task = Task.new
   end
 end
